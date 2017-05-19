@@ -15,3 +15,18 @@ def test_header_only():
 
     markdown(string_to_render)
     assert json.loads(renderer()) == header
+
+
+def test_header_with_description():
+    header = {"test-header": {"description": "header description"}}
+    string_to_render = '''
+# test-header
+
+header description
+'''
+
+    renderer = md2json.JsonRenderer()
+    markdown = mistune.Markdown(renderer=renderer)
+
+    markdown(string_to_render)
+    assert json.loads(renderer()) == header
