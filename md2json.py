@@ -19,6 +19,8 @@ class JsonRenderer(mistune.Renderer):
         self.document = {}
 
     def __call__(self):
+        if len(self.description) > 0:
+            self.document[self.item_name] = {"description": ''.join(self.description)}
         return json.dumps(self.document)
 
     def block_code(self, code, language=None):
@@ -38,6 +40,7 @@ class JsonRenderer(mistune.Renderer):
     def list_item(self, text):
         return ""
     def paragraph(self, text):
+        self.description.append(text)
         return text
     def table(self, header, body):
         return ""
