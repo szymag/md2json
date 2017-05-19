@@ -14,19 +14,13 @@ class State(Enum):
 class JsonRenderer(mistune.Renderer):
     def __init__(self):
         super().__init__()
-        self.property_name = None
-        self.value_list = []
-        self.row_items = []
-        self.headers = []
-        self.is_header = True
-        self.state = State.INIT
-        self.keys = []
-        self.buffer = []
+        self.description = []
         self.item_name = None
-        self.item = None
         self.document = {}
 
     def __call__(self):
+        if len(self.description) > 0:
+            self.document[self.item_name] = {"description": ''.join(self.description)}
         return json.dumps(self.document)
 
     def block_code(self, code, language=None):
@@ -36,17 +30,8 @@ class JsonRenderer(mistune.Renderer):
     def block_html(self, html):
         return ""
     def header(self, text, level, raw=None):
-        print("header: {}".format(text))
-        print(self.buffer)
-        # self.item_name = ''.join(self.buffer)
-        # self.buffer.clear()
-        # self.state = State.HEADER
-        # name = self.property_name
-        # self.property_name = text
-        # if name is not None:
-        #     return "{{{name}:{items}}}".format(
-        #         name=name, items=json.dumps(self.value_list))
-        self.document = {text: None}
+        self.item_name = text
+        self.document = {self.item_name: None}
         return json.dumps(text)
     def hrule(self):
         return ""
@@ -55,27 +40,14 @@ class JsonRenderer(mistune.Renderer):
     def list_item(self, text):
         return ""
     def paragraph(self, text):
-        print("paragraph:{}".format(text))
+        self.description.append(text)
         return text
     def table(self, header, body):
-        self.is_header = True
-        # print("table")
-        # return ""
-        # print(self.headers)
-        return "header: {}\nbody: {}".format(header, body)
+        return ""
     def table_row(self, content):
-        # print("table_row")
-        # return content
-        print("headers: {}".format(self.headers))
-        self.keys = list(self.headers)
-        self.is_header = False
-        self.headers.clear()
-        return "row: {}".format(content)
+        return ""
     def table_cell(self, content, **flags):
-        print("table_cell")
-        if self.is_header:
-            self.headers.append(content)
-        return "cell: {}".format(content)
+        return ""
     def autolink(self, link, is_email=False):
         return ""
     def codespan(self, text):
@@ -95,8 +67,6 @@ class JsonRenderer(mistune.Renderer):
     def strikethrough(self, text):
         return ""
     def text(self, text):
-        print("text: {}".format(text))
-        self.buffer.append(text)
         return text
     def inline_html(self, text):
         return ""
@@ -108,15 +78,10 @@ class JsonRenderer(mistune.Renderer):
         return ""
 
 if __name__ == '__main__':
-    # assert len(sys.argv) > 1
-    # inf = sys.argv[1]
-
-    renderer = JsonRenderer()
-    markdown = mistune.Markdown(renderer=renderer)
-
-    markdown('# test')
-    print(renderer())
-
-    # with open(inf, 'r') as f:
-    #     s = f.read()
-    #     print(markdown(s))
+    if len(sys.argv) > 1:
+        inf = sys.argv[1]
+        renderer = JsonRenderer()
+        markdown = mistune.Markdown(renderer=renderer)
+        with open(inf, 'r') as f:
+            s = f.read()
+            print(markdown(s))
