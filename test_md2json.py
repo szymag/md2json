@@ -4,6 +4,7 @@ import mistune
 
 import md2json
 
+
 def test_header_only():
     header = {'test-header': None}
     string_to_render = '''
@@ -34,7 +35,7 @@ header description
 
 def test_header_without_description_with_attributes():
     header = {"test-header": {
-        "attributes":[
+        "attributes": [
             {"Byte": '0', "Length": '4', "Desc": "Signature"},
             {"Byte": '4', "Length": '4', "Desc": "Version"},
             {"Byte": '8', "Length": '4', "Desc": "File size"}
