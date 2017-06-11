@@ -32,7 +32,7 @@ class JsonRenderer(mistune.Renderer):
     def header(self, text, level, raw=None):
         self.item_name = text
         self.document = {self.item_name: None}
-        return json.dumps(text)
+        return ""
     def hrule(self):
         return ""
     def list(self, body, ordered=True):
@@ -41,7 +41,7 @@ class JsonRenderer(mistune.Renderer):
         return ""
     def paragraph(self, text):
         self.description.append(text)
-        return text
+        return ""
     def table(self, header, body):
         return ""
     def table_row(self, content):
@@ -84,4 +84,4 @@ if __name__ == '__main__':
         markdown = mistune.Markdown(renderer=renderer)
         with open(inf, 'r') as f:
             s = f.read()
-            print(markdown(s))
+            markdown(s)
