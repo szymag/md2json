@@ -33,7 +33,7 @@ class JsonRenderer(mistune.Renderer):
             if self.document[self.item_name] is None:
                 self.document[self.item_name] = {}
             self.document[self.item_name]["attributes"] = self.item_attributes
-        return json.dumps(self.document)
+        return json.dumps(self.document, indent=4)
 
     def block_code(self, code, language=None):
         return ""
@@ -127,4 +127,5 @@ if __name__ == '__main__':
         markdown = mistune.Markdown(renderer=renderer)
         with open(inf, 'r') as f:
             s = f.read()
-            print(markdown(s))
+            markdown(s)
+            print(renderer())
